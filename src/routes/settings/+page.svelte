@@ -1,0 +1,73 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { auth } from '$lib/stores/auth.svelte.js';
+	import { portfolio } from '$lib/stores/portfolio.svelte.js';
+	import { goto } from '$app/navigation';
+	import Nav from '$lib/components/Nav.svelte';
+	import GreatWaveArt from '$lib/components/GreatWaveArt.svelte';
+	import WalletConnect from '$lib/components/WalletConnect.svelte';
+	import AddressInput from '$lib/components/AddressInput.svelte';
+
+	let currency = $state('usd');
+	let walletAddress = $state('');
+
+	onMount(() => {
+		if (!auth.user) goto('/login');
+		walletAddress = auth.user?.walletAddress || '';
+	});
+
+	function onWalletConnected(event: CustomEvent<{ address: string }>) {
+		walletAddress = event.detail.address;
+	}
+</script>
+
+<Nav />
+<GreatWaveArt />
+
+<main class="settings">
+	<h1>Settings</h1>
+
+	<div class="section panel">
+		<h2>Account</h2>
+		<p>Username: <strong>{auth.user?.username}</strong></p>
+	</div>
+
+	<div class="section panel">
+		<h2>Wallet</h2>
+		{#if walletAddress}
+			<p class="address">Connected: <code>{walletAddress}</code></p>
+		{:else}
+			<p class="desc">Connect a wallet to auto-import token holdings.</p>
+			<WalletConnect on:connected={onWalletConnected} />
+			<div class="divider"><span>or</span></div>
+			<AddressInput on:connected={onWalletConnected} />
+		{/if}
+	</div>
+
+	<div class="section panel">
+		<h2>Display</h2>
+		<div class="field">
+			<label for="currency">Currency</label>
+			<select id="currency" class="input" bind:value={currency}>
+				<option value="usd">USD</option>
+				<option value="eur">EUR</option>
+				<option value="gbp">GBP</option>
+				<option value="jpy">JPY</option>
+			</select>
+		</div>
+	</div>
+</main>
+
+<style>
+	.settings { max-width: 600px; margin: 0 auto; padding: var(--s4); }
+	h1 { font-size: 1.4rem; margin-bottom: var(--s4); }
+	.section { padding: var(--s4); margin-bottom: var(--s4); }
+	.section h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--wave-mid); margin-bottom: var(--s3); }
+	.section .desc { font-size: 0.85rem; color: var(--wave-mid); margin-bottom: var(--s3); }
+	.address { font-size: 0.85rem; }
+	.address code { background: var(--linen-2); padding: 2px var(--s1); border-radius: 4px; word-break: break-all; font-size: 0.8rem; }
+	.divider { display: flex; align-items: center; gap: var(--s2); margin: var(--s3) 0; color: var(--wave-mid); font-size: 0.82rem; }
+	.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--linen-2); }
+	.field { display: flex; flex-direction: column; gap: var(--s1); }
+	.field label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; color: var(--wave-mid); }
+</style>
