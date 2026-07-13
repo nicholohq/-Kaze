@@ -1,17 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { portfolio } from '$lib/stores/portfolio.svelte.js';
 	import { createChart, type IChartApi, type ISeriesApi } from 'lightweight-charts';
 
 	let chartContainer: HTMLDivElement;
-	let chart: IChartApi;
-	let series: ISeriesApi<'Line'>;
+	let chart: IChartApi | undefined;
+	let series: ISeriesApi<'Line'> | undefined;
 
 	let timeframes = ['1D', '1W', '1M', '3M', '1Y', 'ALL'];
 	let activeTF = $state('1W');
 
 	function generateMockData(days: number) {
+		const baseValue = portfolio.totalValue > 0 ? portfolio.totalValue : 10000;
 		const data: { time: string; value: number }[] = [];
-		let val = 10000;
+		let val = baseValue;
 		const now = new Date();
 		for (let i = days; i >= 0; i--) {
 			const d = new Date(now);
@@ -25,15 +27,18 @@
 		return data;
 	}
 
+	let hasHoldings = $derived(portfolio.holdings.length > 0);
+
 	$effect(() => {
+		if (!hasHoldings || !series) return;
 		const days = activeTF === '1D' ? 1 : activeTF === '1W' ? 7 : activeTF === '1M' ? 30 : activeTF === '3M' ? 90 : activeTF === '1Y' ? 365 : 730;
-		if (series) {
-			series.setData(generateMockData(days));
-			chart.timeScale().fitContent();
-		}
+		series.setData(generateMockData(days));
+		chart?.timeScale().fitContent();
 	});
 
 	onMount(() => {
+		if (!hasHoldings) return;
+
 		chart = createChart(chartContainer, {
 			width: chartContainer.clientWidth,
 			height: 300,
@@ -64,13 +69,13 @@
 		chart.timeScale().fitContent();
 
 		const observer = new ResizeObserver(() => {
-			chart.applyOptions({ width: chartContainer.clientWidth });
+			chart?.applyOptions({ width: chartContainer.clientWidth });
 		});
 		observer.observe(chartContainer);
 
 		return () => {
 			observer.disconnect();
-			chart.remove();
+			chart?.remove();
 		};
 	});
 </script>
@@ -78,17 +83,31 @@
 <div class="chart-section panel">
 	<div class="header">
 		<h2>Portfolio Value</h2>
-		<div class="timeframes">
-			{#each timeframes as tf}
-				<button
-					class="tf-btn"
-					class:active={activeTF === tf}
-					onclick={() => activeTF = tf}
-				>{tf}</button>
-			{/each}
-		</div>
+		{#if hasHoldings}
+			<div class="timeframes">
+				{#each timeframes as tf}
+					<button
+						class="tf-btn"
+						class:active={activeTF === tf}
+						onclick={() => activeTF = tf}
+					>{tf}</button>
+				{/each}
+			</div>
+		{/if}
 	</div>
-	<div bind:this={chartContainer} class="chart-container"></div>
+	{#if hasHoldings}
+		<div bind:this={chartContainer} class="chart-container"></div>
+	{:else}
+		<div class="chart-placeholder">
+			<svg viewBox="0 0 48 48" width="32" height="32" fill="none" stroke="var(--wave-mid)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M4 36 C12 22, 18 16, 26 20 C34 24, 40 12, 44 14" />
+				<circle cx="4" cy="36" r="2" fill="var(--wave-mid)" stroke="none" />
+				<circle cx="26" cy="20" r="2" fill="var(--wave-mid)" stroke="none" />
+				<circle cx="44" cy="14" r="2" fill="var(--wave-mid)" stroke="none" />
+			</svg>
+			<p>Import a wallet or add holdings to see your portfolio chart</p>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -100,4 +119,6 @@
 	.tf-btn.active { background: var(--wave-deep); color: var(--wave-foam); }
 	.tf-btn:hover:not(.active) { background: var(--linen-2); }
 	.chart-container { width: 100%; }
+	.chart-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s3); padding: var(--s6) var(--s4); color: var(--wave-mid); text-align: center; }
+	.chart-placeholder p { font-size: 0.88rem; max-width: 280px; line-height: 1.5; }
 </style>

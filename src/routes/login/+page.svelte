@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { auth } from '$lib/stores/auth.svelte.js';
 	import { goto } from '$app/navigation';
+	import Nav from '$lib/components/Nav.svelte';
+	import GreatWaveArt from '$lib/components/GreatWaveArt.svelte';
 
 	let mode = $state<'login' | 'signup'>('login');
 	let username = $state('');
@@ -31,6 +33,9 @@
 <svelte:head>
 	<title>Kaze — Sign In</title>
 </svelte:head>
+
+<Nav />
+<GreatWaveArt />
 
 <div class="page">
 	<div class="card panel">
@@ -69,7 +74,7 @@
 </div>
 
 <style>
-	.page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: var(--s4); }
+	.page { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 220px - 48px); padding: var(--s4); }
 	.card { width: 100%; max-width: 400px; padding: var(--s5); text-align: center; }
 	.wave-icon { margin-bottom: var(--s3); display: flex; justify-content: center; }
 	h1 { font-size: 1.5rem; margin-bottom: var(--s5); }

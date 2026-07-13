@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { auth } from '$lib/stores/auth.svelte.js';
 	import { goto } from '$app/navigation';
-	import HokusaiWave from '$lib/components/HokusaiWave.svelte';
 	import { reveal } from '$lib/actions.js';
 
 	onMount(() => {
@@ -16,16 +15,15 @@
 
 <div class="landing">
 	<div class="hero">
-		<div class="hero-wave">
-			<HokusaiWave variant="hero" />
-		</div>
+		<div class="hero-bg"></div>
+		<div class="hero-overlay"></div>
 		<div class="hero-content">
 			<div class="hero-card">
 				<h1>Kaze</h1>
 				<p class="tagline">Track your Ethereum portfolio</p>
 				<div class="cta-buttons">
 					<a href="/login" class="btn btn--primary">Get Started</a>
-					<a href="/login" class="btn btn--ghost">Sign In</a>
+					<a href="/login" class="btn btn--ghost btn--ghost-light">Sign In</a>
 				</div>
 			</div>
 		</div>
@@ -77,14 +75,24 @@
 	.landing { position: relative; min-height: 100vh; overflow: hidden; background: var(--linen); }
 
 	.hero { position: relative; height: 100vh; }
-	.hero-wave { position: absolute; inset: 0; z-index: 0; }
-	.hero-wave :global(svg) { width: 100%; height: 100%; object-fit: cover; }
+	.hero-bg {
+		position: absolute; inset: 0; z-index: 0;
+		background: url('/greatwave.jpg') center center / cover no-repeat;
+		filter: contrast(1.12) saturate(1.08);
+	}
+	.hero-overlay {
+		position: absolute; inset: 0; z-index: 1;
+		background: linear-gradient(180deg, rgba(26,42,58,0.35) 0%, rgba(26,42,58,0.65) 100%);
+	}
 
-	.hero-content { position: relative; z-index: 1; height: 100%; display: flex; align-items: flex-start; justify-content: center; padding-top: min(10vh, 100px); }
+	.hero-content { position: relative; z-index: 2; height: 100%; display: flex; align-items: flex-start; justify-content: center; padding-top: min(10vh, 100px); }
 	.hero-card { background: rgba(26, 42, 58, 0.88); padding: var(--s5) var(--s6); border-radius: var(--radius); text-align: center; max-width: 480px; backdrop-filter: blur(4px); border: 3px solid var(--charcoal); }
 	.hero-card h1 { font-size: 3rem; color: var(--linen); margin-bottom: var(--s2); }
 	.hero-card .tagline { font-size: 1.1rem; color: var(--wave-foam); margin-bottom: var(--s5); line-height: 1.6; opacity: 0.85; }
 	.cta-buttons { display: flex; gap: var(--s3); justify-content: center; }
+
+	:global(.btn--ghost-light) { color: var(--linen); border-color: var(--linen); }
+	:global(.btn--ghost-light:hover) { background: rgba(255,255,255,0.1); }
 
 	.features-section { position: relative; z-index: 1; padding: var(--s6) var(--s4); }
 	.features { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--s4); }

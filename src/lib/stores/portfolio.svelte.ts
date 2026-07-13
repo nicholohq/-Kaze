@@ -35,7 +35,9 @@ class PortfolioStore {
 			if (res.ok) {
 				this.prices = { ...this.prices, ...(await res.json()) };
 			}
-		} catch {}
+		} catch (e) {
+			console.error('Failed to fetch prices:', e);
+		}
 	}
 
 	async fetchHoldings() {
@@ -47,21 +49,27 @@ class PortfolioStore {
 					await this.fetchPrices(this.holdings.map((h: any) => h.coinId));
 				}
 			}
-		} catch {}
+		} catch (e) {
+			console.error('Failed to fetch holdings:', e);
+		}
 	}
 
 	async fetchWatchlist() {
 		try {
 			const res = await fetch('/api/watchlist');
 			if (res.ok) this.watchlist = await res.json();
-		} catch {}
+		} catch (e) {
+			console.error('Failed to fetch watchlist:', e);
+		}
 	}
 
 	async fetchMarketCoins() {
 		try {
 			const res = await fetch('/api/market/top?per_page=100');
 			if (res.ok) this.marketCoins = await res.json();
-		} catch {}
+		} catch (e) {
+			console.error('Failed to fetch market coins:', e);
+		}
 	}
 
 	async addHolding(data: { coinId: string; amount: number; purchasePrice?: number; source?: string }) {
@@ -150,11 +158,21 @@ class PortfolioStore {
 		this.loading = false;
 	}
 
+	private pollInterval: ReturnType<typeof setInterval> | null = null;
+
 	startPricePolling() {
-		setInterval(() => {
+		this.stopPricePolling();
+		this.pollInterval = setInterval(() => {
 			const coinIds = this.holdings.map((h: any) => h.coinId);
 			if (coinIds.length > 0) this.fetchPrices(coinIds);
 		}, 60_000);
+	}
+
+	stopPricePolling() {
+		if (this.pollInterval) {
+			clearInterval(this.pollInterval);
+			this.pollInterval = null;
+		}
 	}
 }
 

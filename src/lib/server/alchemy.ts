@@ -16,32 +16,38 @@ const settings = {
 	network: Network.ETH_MAINNET
 };
 
+const alchemy = new Alchemy(settings);
+
 export async function getEthBalance(address: string): Promise<string> {
-	const alchemy = new Alchemy(settings);
 	const balance = await alchemy.core.getBalance(address);
 	return balance.toString();
 }
 
 export async function getTokenBalances(address: string): Promise<TokenBalance[]> {
-	const alchemy = new Alchemy(settings);
 	const balances = await alchemy.core.getTokenBalances(address);
 	const tokens: TokenBalance[] = [];
 
-	for (const token of balances.tokenBalances) {
-		if (token.tokenBalance === '0') continue;
-		try {
-			const metadata = await alchemy.core.getTokenMetadata(token.contractAddress);
-			tokens.push({
-				contractAddress: token.contractAddress,
-				symbol: metadata.symbol || 'UNKNOWN',
-				name: metadata.name || 'Unknown Token',
-				logo: metadata.logo || null,
-				balance: token.tokenBalance,
-				decimals: metadata.decimals || 18
-			});
-		} catch {
-			// skip tokens we can't read metadata for
-		}
+	const metadataPromises = balances.tokenBalances
+		.filter(t => t.tokenBalance !== '0')
+		.map(async (token) => {
+			try {
+				const metadata = await alchemy.core.getTokenMetadata(token.contractAddress);
+				return {
+					contractAddress: token.contractAddress,
+					symbol: metadata.symbol || 'UNKNOWN',
+					name: metadata.name || 'Unknown Token',
+					logo: metadata.logo || null,
+					balance: token.tokenBalance,
+					decimals: metadata.decimals || 18
+				};
+			} catch {
+				return null;
+			}
+		});
+
+	const results = await Promise.all(metadataPromises);
+	for (const r of results) {
+		if (r) tokens.push(r);
 	}
 
 	return tokens;

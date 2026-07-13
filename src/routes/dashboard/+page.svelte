@@ -24,6 +24,9 @@
 		}
 		portfolio.fetchAll();
 		portfolio.startPricePolling();
+		return () => {
+			portfolio.stopPricePolling();
+		};
 	});
 
 	async function onWalletConnected(event: CustomEvent<{ address: string }>) {

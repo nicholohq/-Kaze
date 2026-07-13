@@ -1,5 +1,18 @@
 const BASE = 'https://api.coingecko.com/api/v3';
 
+const cache = new Map<string, { data: any; expiry: number }>();
+
+function withCache<T>(key: string, ttlMs: number, fn: () => Promise<T>): Promise<T> {
+	const cached = cache.get(key);
+	if (cached && cached.expiry > Date.now()) {
+		return Promise.resolve(cached.data as T);
+	}
+	return fn().then(data => {
+		cache.set(key, { data, expiry: Date.now() + ttlMs });
+		return data;
+	});
+}
+
 export interface CoinMarketData {
 	id: string;
 	symbol: string;
@@ -38,9 +51,11 @@ async function fetchJson(url: string) {
 }
 
 export async function fetchTopCoins(perPage: number = 100): Promise<CoinMarketData[]> {
-	return fetchJson(
-		`${BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=1&sparkline=true&price_change_percentage=7d`
-	) as Promise<CoinMarketData[]>;
+	return withCache(`top-${perPage}`, 5 * 60 * 1000, () =>
+		fetchJson(
+			`${BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=1&sparkline=true&price_change_percentage=7d`
+		) as Promise<CoinMarketData[]>
+	);
 }
 
 export async function fetchCoinDetail(coinId: string): Promise<CoinDetail> {
@@ -56,7 +71,10 @@ export async function fetchPriceHistory(coinId: string, days: number = 7): Promi
 }
 
 export async function fetchSimplePrice(coinIds: string[]): Promise<Record<string, { usd: number; usd_24h_change?: number }>> {
-	return fetchJson(
-		`${BASE}/simple/price?ids=${coinIds.join(',')}&vs_currencies=usd&include_24hr_change=true`
-	) as Promise<Record<string, { usd: number; usd_24h_change?: number }>>;
+	const key = coinIds.slice().sort().join(',');
+	return withCache(`price-${key}`, 60 * 1000, () =>
+		fetchJson(
+			`${BASE}/simple/price?ids=${coinIds.join(',')}&vs_currencies=usd&include_24hr_change=true`
+		) as Promise<Record<string, { usd: number; usd_24h_change?: number }>>
+	);
 }

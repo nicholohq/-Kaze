@@ -78,7 +78,7 @@
 							<td class="coin-name">{h.coinId}</td>
 							<td>{h.amount}</td>
 							<td>${getPrice(h.coinId).toFixed(2)}</td>
-							<td class={getChange(h.coinId) >= 0 ? 'positive' : 'negative'}>
+							<td class={getChange(h.coinId) != null ? (getChange(h.coinId) >= 0 ? 'positive' : 'negative') : ''}>
 								{getChange(h.coinId)?.toFixed(2) ?? '--'}%
 							</td>
 							<td class="value-cell">${(h.amount * getPrice(h.coinId)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>

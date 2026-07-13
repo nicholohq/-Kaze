@@ -37,6 +37,6 @@
 
 {#if !loaderDone}
 	<Loader />
+{:else}
+	{@render children()}
 {/if}
-
-{@render children()}
