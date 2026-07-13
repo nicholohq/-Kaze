@@ -19,10 +19,10 @@
 			Kaze
 		</a>
 		<div class="nav-right">
-			<a href="/settings" class="btn btn--ghost btn--sm nav-hide">Settings</a>
+			<a href="/settings" class="btn btn--ghost btn--sm">Settings</a>
 			{#if auth.user}
-				<span class="username nav-hide">{auth.user.username}</span>
-				<button class="btn btn--ghost btn--sm nav-hide" onclick={handleLogout}>Logout</button>
+				<span class="username">{auth.user.username}</span>
+				<button class="btn btn--ghost btn--sm" onclick={handleLogout}>Logout</button>
 			{:else}
 				<a href="/login" class="btn btn--sm">Sign In</a>
 			{/if}
@@ -43,7 +43,5 @@
 	.brand:hover { color: var(--gold); }
 	.brand:hover::after { width: 70%; left: 15%; }
 	.nav-right { display: flex; align-items: center; gap: var(--s3); }
-	.nav-hide { opacity: 0; pointer-events: none; transition: opacity .3s ease; }
-	nav:hover .nav-hide { opacity: 1; pointer-events: auto; }
 	.username { font-size: 0.85rem; opacity: 0.8; }
 </style>
