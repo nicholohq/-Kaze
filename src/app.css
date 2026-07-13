@@ -8,6 +8,7 @@
   --gold: #c5a059;
   --ink: #1a1a1a;
   --matcha: #6b8f5e;
+  --wasabi: #8fc98a;
   --crimson: #dc3545;
   --paper: #ffffff;
   --charcoal: #2c2c2c;
@@ -37,48 +38,92 @@ body {
   background-color: var(--linen);
   color: var(--charcoal);
   font-family: var(--gothic);
-  line-height: 1.6;
+  line-height: 1.7;
   min-height: 100vh;
   background-image: radial-gradient(circle at 1px 1px, rgba(26,42,58,0.05) 1px, transparent 0);
   background-size: 22px 22px;
 }
 
-h1, h2, h3, h4 { font-family: var(--serif); color: var(--charcoal); letter-spacing: 0.5px; line-height: 1.25; }
+img { filter: contrast(1.12) saturate(1.08); }
+
+h1, h2, h3, h4 { font-family: var(--serif); color: var(--charcoal); letter-spacing: 1px; line-height: 1.25; }
 a { color: var(--vermilion); }
 ::selection { background: var(--vermilion); color: var(--linen); }
 :focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: 2px; }
 
+/* ============ BUTTONS ============ */
 .btn {
   font-family: var(--gothic); font-weight: 700; font-size: 0.9rem;
   letter-spacing: 0.5px; color: var(--linen); background: var(--charcoal);
   border: var(--border-thin); border-radius: var(--radius);
   padding: var(--s2) var(--s4); cursor: pointer;
   display: inline-flex; align-items: center; gap: var(--s2);
+  text-decoration: none;
   transition: transform var(--ease), box-shadow var(--ease), background var(--ease);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 3px 3px 0 var(--charcoal);
 }
-.btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--charcoal); }
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--charcoal); }
 .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--charcoal); }
 .btn--primary { background: var(--vermilion); }
+.btn--primary:hover { background: var(--vermilion-2); }
 .btn--primary:active { background: var(--vermilion-2); }
-.btn--ghost { background: transparent; color: var(--charcoal); box-shadow: none; }
+.btn--ghost { background: transparent; color: var(--charcoal); box-shadow: none; border-color: var(--charcoal); }
 .btn--ghost:hover { background: var(--linen-2); transform: none; box-shadow: none; }
 .btn--sm { padding: var(--s1) var(--s2); font-size: 0.78rem; box-shadow: none; }
+.btn--sm:hover { box-shadow: none; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
+/* ============ INPUTS ============ */
 .input {
   font-family: var(--gothic); font-size: 0.92rem; color: var(--charcoal);
   background: var(--paper); border: var(--border-thin); border-radius: var(--radius);
   padding: var(--s2) var(--s3); width: 100%;
 }
 .input::placeholder { color: #9a948a; }
-.input:focus-visible { border-color: var(--vermilion); }
+.input:focus-visible { border-color: var(--vermilion); box-shadow: 3px 3px 0 var(--vermilion); }
 
+/* ============ PANELS / CARDS ============ */
 .panel {
   background: var(--paper);
   border: var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.panel:hover {
+  transform: translateY(-4px);
+  box-shadow: 8px 8px 0 var(--vermilion);
+}
+
+/* ============ SECTION REVEAL ============ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .8s ease, transform .8s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ============ SECTION TITLE KANJI ============ */
+.section-title {
+  font-size: 1.1rem;
+  margin-bottom: var(--s3);
+  font-weight: 900;
+}
+.section-title::before {
+  content: attr(data-kanji);
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 6px;
+  color: var(--vermilion);
+  margin-bottom: 0.1rem;
+  font-weight: 700;
+  text-transform: none;
+}
+
+/* ============ SCROLL PROGRESS ============ */
+#scroll-progress {
+  position: fixed; top: 0; left: 0; height: 4px; width: 0;
+  background: var(--vermilion); z-index: 10000; transition: width .1s linear;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -86,4 +131,5 @@ a { color: var(--vermilion); }
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }
+  .reveal { opacity: 1; transform: none; }
 }

@@ -12,8 +12,10 @@
 	import PortfolioChart from '$lib/components/PortfolioChart.svelte';
 	import MarketRankings from '$lib/components/MarketRankings.svelte';
 	import Watchlist from '$lib/components/Watchlist.svelte';
+	import { reveal } from '$lib/actions.js';
 
 	let showWalletImport = $state(false);
+	let importMessage = $state('');
 
 	onMount(() => {
 		if (!auth.user && !auth.loading) {
@@ -24,28 +26,41 @@
 		portfolio.startPricePolling();
 	});
 
-	function onWalletConnected(event: CustomEvent<{ address: string }>) {
+	async function onWalletConnected(event: CustomEvent<{ address: string }>) {
 		const { address } = event.detail;
-		portfolio.importWallet(address);
+		importMessage = '';
+		await portfolio.importWallet(address);
+		if (portfolio.walletData) {
+			const short = address.slice(0, 6) + '...' + address.slice(-4);
+			importMessage = `Imported wallet ${short}`;
+		}
 		showWalletImport = false;
 	}
 </script>
+
+<svelte:head>
+	<title>Kaze — Dashboard</title>
+</svelte:head>
 
 <Nav />
 <GreatWaveArt />
 
 <main class="dashboard">
 	<div class="top-bar">
-		<h1>Dashboard</h1>
+		<h1 class="section-title" data-kanji="風">Kaze</h1>
 		<button class="btn btn--primary btn--sm" onclick={() => showWalletImport = !showWalletImport}>
 			{showWalletImport ? 'Cancel' : '+ Import Wallet'}
 		</button>
 	</div>
 
+	{#if importMessage}
+		<div class="import-msg panel">{importMessage}</div>
+	{/if}
+
 	{#if showWalletImport}
-		<div class="wallet-section panel">
+		<div class="wallet-section panel reveal" use:reveal>
 			<h3>Import Wallet</h3>
-			<p class="desc">Connect MetaMask or paste an Ethereum address to automatically import token holdings.</p>
+			<p class="desc">Import holdings from MetaMask or any Ethereum address.</p>
 			<WalletConnect on:connected={onWalletConnected} />
 			<div class="divider"><span>or</span></div>
 			<AddressInput on:connected={onWalletConnected} />
@@ -56,19 +71,19 @@
 		<p class="loading-text">Loading portfolio data...</p>
 	{:else}
 		<div class="grid">
-			<div class="grid-overview">
+			<div class="grid-overview reveal" use:reveal>
 				<PortfolioOverview />
 			</div>
-			<div class="grid-chart">
+			<div class="grid-chart reveal" use:reveal>
 				<PortfolioChart />
 			</div>
-			<div class="grid-main">
+			<div class="grid-main reveal" use:reveal>
 				<HoldingsTable />
 			</div>
-			<div class="grid-side">
+			<div class="grid-side reveal" use:reveal>
 				<Watchlist />
 			</div>
-			<div class="grid-full">
+			<div class="grid-full reveal" use:reveal>
 				<MarketRankings />
 			</div>
 		</div>
@@ -78,7 +93,9 @@
 <style>
 	.dashboard { max-width: 1200px; margin: 0 auto; padding: var(--s4); }
 	.top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--s4); }
-	.top-bar h1 { font-size: 1.4rem; }
+	.top-bar .section-title { font-size: 1.4rem; margin-bottom: 0; }
+	.top-bar .section-title::before { font-size: 0.8rem; }
+	.import-msg { padding: var(--s2) var(--s3); margin-bottom: var(--s3); font-size: 0.85rem; color: var(--matcha); font-weight: 700; }
 	.wallet-section { padding: var(--s4); margin-bottom: var(--s4); }
 	.wallet-section h3 { margin-bottom: var(--s2); }
 	.wallet-section .desc { font-size: 0.85rem; color: var(--wave-mid); margin-bottom: var(--s3); }

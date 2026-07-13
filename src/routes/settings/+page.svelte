@@ -7,6 +7,7 @@
 	import GreatWaveArt from '$lib/components/GreatWaveArt.svelte';
 	import WalletConnect from '$lib/components/WalletConnect.svelte';
 	import AddressInput from '$lib/components/AddressInput.svelte';
+	import { reveal } from '$lib/actions.js';
 
 	let currency = $state('usd');
 	let walletAddress = $state('');
@@ -21,31 +22,35 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Kaze — Settings</title>
+</svelte:head>
+
 <Nav />
 <GreatWaveArt />
 
 <main class="settings">
-	<h1>Settings</h1>
+	<h1 class="section-title" data-kanji="設">Settings</h1>
 
-	<div class="section panel">
-		<h2>Account</h2>
+	<div class="section panel reveal" use:reveal>
+		<h2 class="section-title" data-kanji="帳">Account</h2>
 		<p>Username: <strong>{auth.user?.username}</strong></p>
 	</div>
 
-	<div class="section panel">
-		<h2>Wallet</h2>
+	<div class="section panel reveal" use:reveal>
+		<h2 class="section-title" data-kanji="財">Wallet</h2>
 		{#if walletAddress}
 			<p class="address">Connected: <code>{walletAddress}</code></p>
 		{:else}
-			<p class="desc">Connect a wallet to auto-import token holdings.</p>
+			<p class="desc">Connect a wallet to import holdings.</p>
 			<WalletConnect on:connected={onWalletConnected} />
 			<div class="divider"><span>or</span></div>
 			<AddressInput on:connected={onWalletConnected} />
 		{/if}
 	</div>
 
-	<div class="section panel">
-		<h2>Display</h2>
+	<div class="section panel reveal" use:reveal>
+		<h2 class="section-title" data-kanji="示">Display</h2>
 		<div class="field">
 			<label for="currency">Currency</label>
 			<select id="currency" class="input" bind:value={currency}>
@@ -61,8 +66,10 @@
 <style>
 	.settings { max-width: 600px; margin: 0 auto; padding: var(--s4); }
 	h1 { font-size: 1.4rem; margin-bottom: var(--s4); }
+	h1.section-title::before { font-size: 0.8rem; }
 	.section { padding: var(--s4); margin-bottom: var(--s4); }
-	.section h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--wave-mid); margin-bottom: var(--s3); }
+	.section .section-title { font-size: 0.85rem; text-transform: uppercase; color: var(--wave-mid); margin-bottom: var(--s3); letter-spacing: 1px; }
+	.section .section-title::before { font-size: 0.7rem; letter-spacing: 4px; }
 	.section .desc { font-size: 0.85rem; color: var(--wave-mid); margin-bottom: var(--s3); }
 	.address { font-size: 0.85rem; }
 	.address code { background: var(--linen-2); padding: 2px var(--s1); border-radius: 4px; word-break: break-all; font-size: 0.8rem; }

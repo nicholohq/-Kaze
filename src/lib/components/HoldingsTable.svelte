@@ -41,7 +41,7 @@
 
 <div class="holdings panel">
 	<div class="header">
-		<h2>Holdings</h2>
+		<h2 class="section-title" data-kanji="波">Holdings</h2>
 		<button class="btn btn--sm btn--primary" onclick={() => showAddForm = !showAddForm}>
 			{showAddForm ? 'Cancel' : '+ Add'}
 		</button>
@@ -95,6 +95,7 @@
 	.holdings { padding: var(--s4); }
 	.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--s3); }
 	h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--wave-mid); }
+	h2::before { font-size: 0.7rem; letter-spacing: 4px; }
 	.add-form { display: flex; gap: var(--s2); flex-wrap: wrap; margin-bottom: var(--s3); padding: var(--s3); background: var(--linen); border-radius: var(--radius); }
 	.add-form .input { flex: 1; min-width: 120px; }
 	.error { color: var(--crimson); font-size: 0.82rem; width: 100%; }

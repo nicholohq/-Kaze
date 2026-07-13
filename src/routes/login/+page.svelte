@@ -28,11 +28,19 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Kaze — Sign In</title>
+</svelte:head>
+
 <div class="page">
 	<div class="card panel">
-		<div class="wave-icon">🌊</div>
+		<div class="wave-icon">
+			<svg viewBox="0 0 32 32" width="40" height="40" fill="var(--wave-deep)" aria-hidden="true">
+				<path d="M2 24 C8 14, 14 10, 22 12 C18 16, 14 20, 10 24 C8 26, 4 26, 2 24 Z" />
+				<path d="M12 18 C16 14, 20 14, 22 16 C20 18, 16 20, 12 18 Z" fill="var(--linen)" opacity="0.3" />
+			</svg>
+		</div>
 		<h1>{mode === 'login' ? 'Sign In' : 'Create Account'}</h1>
-		<p class="subtitle">Kaze — Crypto Portfolio Tracker</p>
 
 		<form onsubmit={handleSubmit}>
 			<div class="field">
@@ -63,9 +71,8 @@
 <style>
 	.page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: var(--s4); }
 	.card { width: 100%; max-width: 400px; padding: var(--s5); text-align: center; }
-	.wave-icon { font-size: 3rem; margin-bottom: var(--s3); }
-	h1 { font-size: 1.5rem; margin-bottom: var(--s1); }
-	.subtitle { font-size: 0.85rem; color: var(--wave-mid); margin-bottom: var(--s5); }
+	.wave-icon { margin-bottom: var(--s3); display: flex; justify-content: center; }
+	h1 { font-size: 1.5rem; margin-bottom: var(--s5); }
 	form { display: flex; flex-direction: column; gap: var(--s3); text-align: left; }
 	.field { display: flex; flex-direction: column; gap: var(--s1); }
 	.field label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; color: var(--wave-mid); }

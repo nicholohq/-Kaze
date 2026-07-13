@@ -1,19 +1,19 @@
-# Kaze 🌊
+# Kaze
 
-> **Kaze (風)** — "wind" in Japanese. In Hokusai's *The Great Wave off Kanagawa*, the wind drives the wave. Kaze helps you read the market winds to navigate your crypto portfolio.
+A crypto portfolio tracker. Japanese-themed, built with SvelteKit.
 
-A Japanese-themed crypto portfolio tracker built with SvelteKit + TypeScript.
+Kaze means "wind" in Japanese. In Hokusai's *The Great Wave off Kanagawa*, the wind drives the wave. Kaze helps you track your Ethereum portfolio.
 
 ## Features
 
-- **👛 Wallet Import** — Connect MetaMask or paste any Ethereum address to auto-import token holdings via Alchemy
-- **📊 Live Prices** — Real-time prices and market data from CoinGecko
-- **📈 Portfolio Chart** — Interactive TradingView Lightweight Charts with multiple timeframes
-- **📋 Holdings Table** — Track coins you own with live P&L calculations
-- **🏆 Market Rankings** — Top 100 coins by market cap with search and sparklines
-- **👀 Watchlist** — Track coins you're interested in
-- **🌊 Great Wave Design** — Ukiyo-e inspired interface with the Great Wave off Kanagawa theme
-- **🔐 User Accounts** — JWT auth with cloud persistence via Turso (libSQL)
+- Wallet Import -- MetaMask or any Ethereum address via Alchemy
+- Live Prices -- prices and market data from CoinGecko
+- Portfolio Chart -- TradingView Lightweight Charts with multiple timeframes
+- Holdings Table -- track coins you own
+- Market Rankings -- top 100 coins by market cap
+- Watchlist -- track coins you are interested in
+- Great Wave Design -- ukiyo-e inspired interface with Hokusai's Great Wave
+- User Accounts -- JWT auth with Turso (libSQL)
 
 ## Tech Stack
 
@@ -32,7 +32,7 @@ A Japanese-themed crypto portfolio tracker built with SvelteKit + TypeScript.
 ## Getting Started
 
 ```bash
-git clone https://github.com/nicholohq/-Kaze.git
+git clone https://github.com/nicholohq/Kaze.git
 cd kaze
 npm install
 ```
@@ -63,43 +63,20 @@ npm run preview
 
 ## Deployment
 
-Deploy to Vercel with the environment variables above. The database schema auto-migrates on first start via `hooks.server.ts`.
+Deploy to Vercel with the environment variables above. The database schema auto-migrates on first start.
 
 ## Project Structure
 
 ```
 src/
-├── lib/
-│   ├── components/       # UI components
-│   │   ├── AddressInput.svelte
-│   │   ├── GreatWaveArt.svelte
-│   │   ├── HoldingsTable.svelte
-│   │   ├── MarketRankings.svelte
-│   │   ├── Nav.svelte
-│   │   ├── PortfolioChart.svelte
-│   │   ├── PortfolioOverview.svelte
-│   │   ├── Sparkline.svelte
-│   │   ├── WalletConnect.svelte
-│   │   └── Watchlist.svelte
-│   ├── server/           # Server-side utilities
-│   │   ├── alchemy.ts
-│   │   ├── auth.ts
-│   │   ├── coingecko.ts
-│   │   ├── db.ts
-│   │   ├── id.ts
-│   │   └── migrate.ts
-│   └── stores/           # Svelte 5 runes stores
-│       ├── auth.svelte.ts
-│       └── portfolio.svelte.ts
-├── routes/
-│   ├── api/
-│   │   ├── auth/         # Login, signup, logout, me
-│   │   ├── holdings/     # CRUD
-│   │   ├── market/       # CoinGecko proxy
-│   │   ├── wallet/       # Alchemy balance proxy
-│   │   └── watchlist/    # CRUD
-│   ├── dashboard/        # Main app
-│   ├── login/            # Auth page
-│   └── settings/         # User preferences
-└── app.css               # Design system
+  lib/
+    components/     UI components
+    server/         Server-side utilities
+    stores/         Svelte 5 runes stores
+  routes/
+    api/            API routes (auth, holdings, market, wallet, watchlist)
+    dashboard/      Main app
+    login/          Auth page
+    settings/       User preferences
+  app.css           Design system
 ```

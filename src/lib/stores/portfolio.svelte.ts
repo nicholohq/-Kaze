@@ -108,6 +108,31 @@ class PortfolioStore {
 			});
 			if (!res.ok) throw new Error((await res.json()).error);
 			this.walletData = await res.json();
+
+			const existing = new Set(this.holdings.map((h: any) => h.coinId + '|' + (h.source || '')));
+
+			const toAdd: { coinId: string; amount: number; contractAddress?: string; source: string }[] = [];
+
+			if (this.walletData.ethBalance && !existing.has('ethereum|wallet')) {
+				const eth = Number(this.walletData.ethBalance) / 1e18;
+				if (eth > 0) {
+					toAdd.push({ coinId: 'ethereum', amount: eth, source: 'wallet' });
+				}
+			}
+
+			if (this.walletData.tokens) {
+				for (const t of this.walletData.tokens) {
+					const coinId = t.symbol.toLowerCase();
+					if (existing.has(coinId + '|wallet')) continue;
+					const balance = Number(t.balance) / Math.pow(10, t.decimals || 18);
+					if (balance > 0) {
+						toAdd.push({ coinId, amount: balance, contractAddress: t.contractAddress, source: 'wallet' });
+					}
+				}
+			}
+
+			await Promise.all(toAdd.map(d => this.addHolding(d)));
+			await this.fetchHoldings();
 		} catch (err: any) {
 			this.error = err.message;
 		} finally {
