@@ -43,5 +43,7 @@
 	.brand:hover { color: var(--gold); }
 	.brand:hover::after { width: 70%; left: 15%; }
 	.nav-right { display: flex; align-items: center; gap: var(--s3); }
-	.username { font-size: 0.85rem; opacity: 0.8; }
+	.nav-right .btn--ghost { color: var(--linen); border-color: rgba(255,255,255,0.4); }
+	.nav-right .btn--ghost:hover { background: rgba(255,255,255,0.1); }
+	.username { font-size: 0.85rem; opacity: 0.9; }
 </style>
