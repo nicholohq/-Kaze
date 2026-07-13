@@ -30,11 +30,23 @@
 <div class="rankings panel">
 	<div class="header">
 		<h2 class="section-title" data-kanji="市">Market Rankings</h2>
-		<input class="input search" placeholder="Search coins..." bind:value={search} />
+		<div class="search-wrap">
+			<input class="input search" placeholder="Search coins..." bind:value={search} />
+			{#if search}
+				<button class="search-clear" aria-label="Clear search" onclick={() => search = ''}>
+					<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+						<line x1="4" y1="4" x2="12" y2="12" />
+						<line x1="12" y1="4" x2="4" y2="12" />
+					</svg>
+				</button>
+			{/if}
+		</div>
 	</div>
 
 	{#if portfolio.marketCoins.length === 0}
-		<p class="empty">Loading market data...</p>
+		<p class="empty">{search ? 'No coins match your search.' : 'Loading market data...'}</p>
+	{:else if filtered.length === 0}
+		<p class="empty">No coins match "{search}".</p>
 	{:else}
 		<div class="table-wrap">
 			<table>
@@ -68,9 +80,14 @@
 								{coin.price_change_percentage_7d_in_currency?.toFixed(2) ?? '--'}%
 							</td>
 							<td class="cap">${coin.market_cap ? (coin.market_cap / 1e9).toFixed(2) + 'B' : '--'}</td>
-							<td>
-								<button class="btn btn--ghost btn--sm" onclick={() => addToWatchlist(coin.id)}>+</button>
-							</td>
+								<td>
+									<button class="btn-icon" aria-label="Add to watchlist" onclick={() => addToWatchlist(coin.id)}>
+										<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<line x1="8" y1="3" x2="8" y2="13" />
+											<line x1="3" y1="8" x2="13" y2="8" />
+										</svg>
+									</button>
+								</td>
 						</tr>
 					{/each}
 				</tbody>
@@ -89,7 +106,23 @@
 	.header { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); margin-bottom: var(--s3); flex-wrap: wrap; }
 	h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--wave-mid); }
 	h2::before { font-size: 0.7rem; letter-spacing: 4px; }
-	.search { max-width: 240px; }
+	.search-wrap { position: relative; max-width: 240px; }
+	.search { width: 100%; }
+	.search-clear {
+		position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+		display: inline-flex; align-items: center; justify-content: center;
+		width: 28px; height: 28px; border: none; background: transparent; cursor: pointer;
+		border-radius: 4px; color: var(--wave-mid);
+		transition: color .15s ease, background .15s ease;
+	}
+	.search-clear:hover { color: var(--charcoal); background: rgba(0,0,0,0.05); }
+	.btn-icon {
+		display: inline-flex; align-items: center; justify-content: center;
+		width: 32px; height: 32px; border: none; background: transparent;
+		cursor: pointer; border-radius: 4px; color: var(--wave-mid);
+		transition: color .15s ease, background .15s ease;
+	}
+	.btn-icon:hover { color: var(--matcha); background: rgba(107,143,94,0.1); }
 	.empty { color: var(--wave-mid); text-align: center; padding: var(--s5) 0; font-size: 0.9rem; }
 	.table-wrap { overflow-x: auto; }
 	table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }

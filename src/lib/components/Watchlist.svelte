@@ -32,7 +32,12 @@
 							{data?.price_change_percentage_24h != null ? `${data.price_change_percentage_24h >= 0 ? '+' : ''}${data.price_change_percentage_24h.toFixed(2)}%` : '--'}
 						</span>
 					</div>
-					<button class="btn btn--ghost btn--sm" onclick={() => remove(coin.id)}>✕</button>
+					<button class="btn-icon" aria-label="Remove from watchlist" onclick={() => remove(coin.id)}>
+						<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+							<line x1="4" y1="4" x2="12" y2="12" />
+							<line x1="12" y1="4" x2="4" y2="12" />
+						</svg>
+					</button>
 				</div>
 			{/each}
 		</div>
@@ -56,4 +61,11 @@
 	.item-change { font-size: 0.72rem; font-weight: 600; }
 	.positive { color: var(--matcha); }
 	.negative { color: var(--crimson); }
+	.btn-icon {
+		display: inline-flex; align-items: center; justify-content: center;
+		width: 32px; height: 32px; border: none; background: transparent;
+		cursor: pointer; border-radius: 4px; color: var(--wave-mid); flex-shrink: 0;
+		transition: color .15s ease, background .15s ease;
+	}
+	.btn-icon:hover { color: var(--crimson); background: rgba(220,53,69,0.08); }
 </style>

@@ -1,7 +1,18 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { auth } from '$lib/stores/auth.svelte.js';
 	import { goto } from '$app/navigation';
 	import SeigaihaPattern from './SeigaihaPattern.svelte';
+
+	let scrolled = $state(false);
+
+	onMount(() => {
+		function onScroll() {
+			scrolled = window.scrollY > 8;
+		}
+		window.addEventListener('scroll', onScroll, { passive: true });
+		return () => window.removeEventListener('scroll', onScroll);
+	});
 
 	function handleLogout() {
 		auth.logout();
@@ -9,7 +20,7 @@
 	}
 </script>
 
-<nav>
+<nav class:scrolled>
 	<div class="nav-pattern" aria-hidden="true"><SeigaihaPattern /></div>
 	<div class="nav-inner">
 		<a href="/dashboard" class="brand">
@@ -31,7 +42,8 @@
 </nav>
 
 <style>
-	nav { position: relative; background: var(--wave-deep); color: var(--wave-foam); padding: var(--s2) var(--s4); border-bottom: 4px solid var(--vermilion); overflow: hidden; }
+	nav { position: sticky; top: 0; z-index: 100; background: var(--wave-deep); color: var(--wave-foam); padding: var(--s2) var(--s4); border-bottom: 4px solid var(--vermilion); overflow: hidden; transition: box-shadow .25s ease; }
+	nav.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,0.25); }
 	.nav-pattern { position: absolute; inset: 0; z-index: 0; color: var(--wave-foam); opacity: .08; }
 	.nav-pattern :global(svg) { width: 100%; height: 100%; }
 	.nav-inner { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }

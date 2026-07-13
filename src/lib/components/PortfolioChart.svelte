@@ -3,7 +3,7 @@
 	import { portfolio } from '$lib/stores/portfolio.svelte.js';
 	import { createChart, type IChartApi, type ISeriesApi } from 'lightweight-charts';
 
-	let chartContainer: HTMLDivElement;
+	let chartContainer = $state<HTMLDivElement>();
 	let chart: IChartApi | undefined;
 	let series: ISeriesApi<'Line'> | undefined;
 
@@ -31,27 +31,34 @@
 
 	function initChart() {
 		if (chart) return;
+		const style = getComputedStyle(document.documentElement);
+		const bg = style.getPropertyValue('--paper').trim() || '#ffffff';
+		const text = style.getPropertyValue('--charcoal').trim() || '#2c2c2c';
+		const grid = style.getPropertyValue('--linen-2').trim() || '#ece4d6';
+		const accent = style.getPropertyValue('--gold').trim() || '#c5a059';
+		const line = style.getPropertyValue('--wave-deep').trim() || '#1a2a3a';
+
 		chart = createChart(chartContainer, {
 			width: chartContainer.clientWidth,
 			height: 300,
 			layout: {
-				background: { color: '#ffffff' },
-				textColor: '#2c2c2c'
+				background: { color: bg },
+				textColor: text
 			},
 			grid: {
-				vertLines: { color: '#ece4d6' },
-				horzLines: { color: '#ece4d6' }
+				vertLines: { color: grid },
+				horzLines: { color: grid }
 			},
 			crosshair: {
-				vertLine: { color: '#c5a059', width: 1, style: 2 },
-				horzLine: { color: '#c5a059', width: 1, style: 2 }
+				vertLine: { color: accent, width: 1, style: 2 },
+				horzLine: { color: accent, width: 1, style: 2 }
 			},
-			rightPriceScale: { borderColor: '#2c2c2c' },
-			timeScale: { borderColor: '#2c2c2c', timeVisible: true }
+			rightPriceScale: { borderColor: text },
+			timeScale: { borderColor: text, timeVisible: true }
 		});
 
 		series = chart.addLineSeries({
-			color: '#1a2a3a',
+			color: line,
 			lineWidth: 2,
 			crosshairMarkerVisible: true,
 			priceFormat: { type: 'price', precision: 2, minMove: 0.01 }
@@ -83,7 +90,7 @@
 
 <div class="chart-section panel">
 	<div class="header">
-		<h2>Portfolio Value</h2>
+		<h2 class="section-title" data-kanji="値">Portfolio Value</h2>
 		{#if hasHoldings}
 			<div class="timeframes">
 				{#each timeframes as tf}
@@ -115,11 +122,12 @@
 	.chart-section { padding: var(--s4); }
 	.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--s3); flex-wrap: wrap; gap: var(--s2); }
 	h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--wave-mid); }
+	h2::before { font-size: 0.7rem; letter-spacing: 4px; }
 	.timeframes { display: flex; gap: var(--s1); }
-	.tf-btn { font-family: var(--gothic); font-size: 0.75rem; padding: 2px var(--s2); border: 2px solid var(--charcoal); border-radius: 4px; background: var(--paper); cursor: pointer; transition: background var(--ease); }
-	.tf-btn.active { background: var(--wave-deep); color: var(--wave-foam); }
+	.tf-btn { font-family: var(--gothic); font-size: 0.72rem; padding: 3px var(--s2); border: 2px solid var(--charcoal); border-radius: var(--radius); background: var(--paper); cursor: pointer; transition: background var(--ease), color var(--ease); font-weight: 600; letter-spacing: 0.3px; }
+	.tf-btn.active { background: var(--charcoal); color: var(--linen); }
 	.tf-btn:hover:not(.active) { background: var(--linen-2); }
-	.chart-container { width: 100%; }
-	.chart-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s3); padding: var(--s6) var(--s4); color: var(--wave-mid); text-align: center; }
+	.chart-container { width: 100%; border: 1px solid var(--linen-2); border-radius: var(--radius); overflow: hidden; }
+	.chart-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s3); padding: var(--s6) var(--s4); color: var(--wave-mid); text-align: center; border: 2px dashed var(--linen-2); border-radius: var(--radius); }
 	.chart-placeholder p { font-size: 0.88rem; max-width: 280px; line-height: 1.5; }
 </style>

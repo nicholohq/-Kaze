@@ -18,14 +18,13 @@
 		<div class="hero-bg"></div>
 		<div class="hero-overlay"></div>
 		<div class="hero-content">
-			<div class="hero-card">
-				<h1>Kaze</h1>
-				<p class="tagline">Track your Ethereum portfolio</p>
-				<div class="cta-buttons">
-					<a href="/login" class="btn btn--primary">Get Started</a>
-					<a href="/login" class="btn btn--ghost btn--ghost-light">Sign In</a>
-				</div>
+			<h1 class="hero-title">Kaze</h1>
+			<p class="hero-sub">Track your Ethereum portfolio</p>
+			<div class="hero-cta">
+				<a href="/login" class="btn btn--primary btn--lg">Get Started</a>
+				<a href="/login" class="btn btn--ghost btn--ghost-light">Sign In</a>
 			</div>
+			<p class="hero-kanji">風</p>
 		</div>
 	</div>
 
@@ -33,9 +32,9 @@
 		<div class="features">
 			<div class="feature panel">
 				<div class="feature-icon">
-					<svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="var(--charcoal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="var(--charcoal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 						<rect x="6" y="12" width="36" height="26" rx="3" />
-						<rect x="6" y="16" width="36" height="8" opacity="0.15" />
+						<rect x="6" y="16" width="36" height="8" opacity="0.12" />
 						<circle cx="32" cy="26" r="3" fill="var(--charcoal)" />
 						<line x1="24" y1="16" x2="24" y2="12" />
 					</svg>
@@ -45,7 +44,7 @@
 			</div>
 			<div class="feature panel">
 				<div class="feature-icon">
-					<svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="var(--charcoal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="var(--charcoal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 						<rect x="6" y="6" width="36" height="36" rx="3" />
 						<polyline points="12,34 19,22 27,28 36,14" />
 						<circle cx="12" cy="34" r="2" fill="var(--charcoal)" stroke="none" />
@@ -59,9 +58,11 @@
 			</div>
 			<div class="feature panel">
 				<div class="feature-icon">
-					<svg viewBox="0 0 48 48" width="40" height="40" fill="var(--charcoal)" stroke="none">
-						<path d="M6 36 Q12 20, 20 24 Q28 28, 34 16 Q38 10, 42 14 Q36 22, 28 20 Q20 18, 14 28 Q10 34, 6 36 Z" opacity="0.8" />
-						<path d="M10 30 Q14 24, 18 26 Q22 28, 26 22 Q28 18, 32 20 Q28 26, 22 24 Q16 22, 14 28 Z" opacity="0.4" />
+					<svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="var(--charcoal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M4 36 C12 22, 18 16, 26 20 C34 24, 40 12, 44 14" />
+						<circle cx="4" cy="36" r="2" fill="var(--charcoal)" stroke="none" />
+						<circle cx="26" cy="20" r="2" fill="var(--charcoal)" stroke="none" />
+						<circle cx="44" cy="14" r="2" fill="var(--charcoal)" stroke="none" />
 					</svg>
 				</div>
 				<h3>Great Wave Design</h3>
@@ -74,25 +75,53 @@
 <style>
 	.landing { position: relative; min-height: 100vh; overflow: hidden; background: var(--linen); }
 
-	.hero { position: relative; height: 100vh; }
+	.hero { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; }
 	.hero-bg {
 		position: absolute; inset: 0; z-index: 0;
-		background: url('/greatwave.jpg') center center / cover no-repeat;
-		filter: contrast(1.12) saturate(1.08);
+		background: url('/greatwave.jpg') center 30% / cover no-repeat;
+		filter: contrast(1.15) saturate(1.1);
 	}
 	.hero-overlay {
 		position: absolute; inset: 0; z-index: 1;
-		background: linear-gradient(180deg, rgba(26,42,58,0.35) 0%, rgba(26,42,58,0.65) 100%);
+		background: linear-gradient(180deg, rgba(26,42,58,0.3) 0%, rgba(26,42,58,0.7) 100%);
+	}
+	.hero-content {
+		position: relative; z-index: 2; text-align: center;
+		display: flex; flex-direction: column; align-items: center;
 	}
 
-	.hero-content { position: relative; z-index: 2; height: 100%; display: flex; align-items: flex-start; justify-content: center; padding-top: min(10vh, 100px); }
-	.hero-card { background: rgba(26, 42, 58, 0.88); padding: var(--s5) var(--s6); border-radius: var(--radius); text-align: center; max-width: 480px; backdrop-filter: blur(4px); border: 3px solid var(--charcoal); }
-	.hero-card h1 { font-size: 3rem; color: var(--linen); margin-bottom: var(--s2); }
-	.hero-card .tagline { font-size: 1.1rem; color: var(--wave-foam); margin-bottom: var(--s5); line-height: 1.6; opacity: 0.85; }
-	.cta-buttons { display: flex; gap: var(--s3); justify-content: center; }
+	.hero-title {
+		font-size: clamp(4rem, 12vw, 10rem);
+		color: var(--linen);
+		line-height: 0.95;
+		letter-spacing: 0.03em;
+		margin-bottom: var(--s3);
+		text-shadow: 0 4px 24px rgba(0,0,0,0.3);
+	}
+	.hero-sub {
+		font-size: clamp(1rem, 2vw, 1.4rem);
+		color: var(--wave-foam);
+		opacity: 0.8;
+		margin-bottom: var(--s5);
+		letter-spacing: 2px;
+		font-weight: 400;
+	}
+	.hero-cta { display: flex; gap: var(--s3); justify-content: center; }
+	.hero-kanji {
+		position: fixed; bottom: -0.15em; right: 0.08em;
+		font-family: var(--serif);
+		font-size: clamp(8rem, 20vw, 20rem);
+		color: var(--linen);
+		opacity: 0.04;
+		line-height: 1;
+		pointer-events: none;
+		user-select: none;
+		z-index: 2;
+	}
 
 	:global(.btn--ghost-light) { color: var(--linen); border-color: var(--linen); }
 	:global(.btn--ghost-light:hover) { background: rgba(255,255,255,0.1); }
+	:global(.btn--lg) { padding: var(--s3) var(--s6); font-size: 1rem; }
 
 	.features-section { position: relative; z-index: 1; padding: var(--s6) var(--s4); }
 	.features { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--s4); }

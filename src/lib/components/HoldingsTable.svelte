@@ -7,10 +7,6 @@
 	let newPrice = $state(0);
 	let addError = $state('');
 
-	let filtered = $derived.by(() => {
-		return portfolio.holdings;
-	});
-
 	function getPrice(coinId: string) {
 		return portfolio.prices[coinId]?.usd || 0;
 	}
@@ -61,7 +57,7 @@
 		<p class="empty">No holdings yet. Add coins or import a wallet.</p>
 	{:else}
 		<div class="table-wrap">
-			<table>
+			<table class="desktop-table">
 				<thead>
 					<tr>
 						<th>Coin</th>
@@ -73,7 +69,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each filtered as h (h.id)}
+					{#each portfolio.holdings as h (h.id)}
 						<tr>
 							<td class="coin-name">{h.coinId}</td>
 							<td>{h.amount}</td>
@@ -82,11 +78,48 @@
 								{getChange(h.coinId)?.toFixed(2) ?? '--'}%
 							</td>
 							<td class="value-cell">${(h.amount * getPrice(h.coinId)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-							<td><button class="btn btn--ghost btn--sm" onclick={() => confirmRemove(h.id)}>✕</button></td>
+							<td>
+								<button class="btn-icon" aria-label="Remove holding" onclick={() => confirmRemove(h.id)}>
+									<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+										<line x1="4" y1="4" x2="12" y2="12" />
+										<line x1="12" y1="4" x2="4" y2="12" />
+									</svg>
+								</button>
+							</td>
 						</tr>
 					{/each}
 				</tbody>
 			</table>
+		</div>
+
+		<div class="mobile-cards">
+			{#each portfolio.holdings as h (h.id)}
+				{@const change = getChange(h.coinId)}
+				{@const value = h.amount * getPrice(h.coinId)}
+				<div class="holding-card">
+					<div class="card-top">
+						<span class="card-coin">{h.coinId}</span>
+						<button class="btn-icon" aria-label="Remove holding" onclick={() => confirmRemove(h.id)}>
+							<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+								<line x1="4" y1="4" x2="12" y2="12" />
+								<line x1="12" y1="4" x2="4" y2="12" />
+							</svg>
+						</button>
+					</div>
+					<div class="card-grid">
+						<div class="card-label">Amount</div>
+						<div class="card-val">{h.amount}</div>
+						<div class="card-label">Price</div>
+						<div class="card-val">${getPrice(h.coinId).toFixed(2)}</div>
+						<div class="card-label">24h</div>
+						<div class="card-val {change != null ? (change >= 0 ? 'positive' : 'negative') : ''}">
+							{change?.toFixed(2) ?? '--'}%
+						</div>
+						<div class="card-label">Value</div>
+						<div class="card-val value-cell">${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+					</div>
+				</div>
+			{/each}
 		</div>
 	{/if}
 </div>
@@ -101,11 +134,35 @@
 	.error { color: var(--crimson); font-size: 0.82rem; width: 100%; }
 	.empty { color: var(--wave-mid); text-align: center; padding: var(--s5) 0; font-size: 0.9rem; }
 	.table-wrap { overflow-x: auto; }
-	table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-	th { text-align: left; padding: var(--s1) var(--s2); border-bottom: var(--border-thin); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wave-mid); }
-	td { padding: var(--s2); border-bottom: 1px solid var(--linen-2); }
+
+	.desktop-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+	.desktop-table th { text-align: left; padding: var(--s1) var(--s2); border-bottom: var(--border-thin); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wave-mid); }
+	.desktop-table td { padding: var(--s2); border-bottom: 1px solid var(--linen-2); }
+	.desktop-table tbody tr { transition: background .15s ease; }
+	.desktop-table tbody tr:hover { background: var(--linen); }
 	.coin-name { font-weight: 700; }
 	.positive { color: var(--matcha); }
 	.negative { color: var(--crimson); }
 	.value-cell { font-family: var(--serif); font-weight: 700; }
+
+	.btn-icon {
+		display: inline-flex; align-items: center; justify-content: center;
+		width: 32px; height: 32px; border: none; background: transparent;
+		cursor: pointer; border-radius: 4px; color: var(--wave-mid);
+		transition: color .15s ease, background .15s ease;
+	}
+	.btn-icon:hover { color: var(--crimson); background: rgba(220,53,69,0.08); }
+
+	.mobile-cards { display: none; flex-direction: column; gap: var(--s3); }
+	.holding-card { padding: var(--s3); background: var(--linen); border-radius: var(--radius); border: 2px solid var(--linen-2); }
+	.card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--s2); }
+	.card-coin { font-weight: 700; font-size: 0.95rem; }
+	.card-grid { display: grid; grid-template-columns: auto 1fr; gap: var(--s1) var(--s3); font-size: 0.85rem; }
+	.card-label { color: var(--wave-mid); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
+	.card-val { font-weight: 600; text-align: right; }
+
+	@media (max-width: 640px) {
+		.table-wrap { display: none; }
+		.mobile-cards { display: flex; }
+	}
 </style>
