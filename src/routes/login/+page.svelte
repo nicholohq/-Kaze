@@ -7,9 +7,11 @@
 	let username = $state('');
 	let password = $state('');
 	let error = $state('');
+	let burst = $state(0); // 花火 — retriggers the button firework on each submit
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
+		burst++;
 		error = '';
 		try {
 			if (mode === 'login') {
@@ -38,7 +40,7 @@
 	<div class="login-overlay"></div>
 	<Nav />
 	<div class="page">
-		<div class="card panel">
+		<div class="card panel washi">
 			<div class="wave-icon">
 				<svg viewBox="0 0 32 32" width="40" height="40" fill="var(--wave-deep)" aria-hidden="true">
 					<path d="M2 24 C8 14, 14 10, 22 12 C18 16, 14 20, 10 24 C8 26, 4 26, 2 24 Z" />
@@ -59,9 +61,20 @@
 				{#if error}
 					<p class="error">{error}</p>
 				{/if}
-				<button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;">
-					{mode === 'login' ? 'Sign In' : 'Create Account'}
-				</button>
+				<div class="submit-wrap">
+					{#key burst}
+						{#if burst > 0}
+							<span class="hanabi" aria-hidden="true">
+								{#each Array(10) as _, i (i)}
+									<span class="spark" style="--a:{i * 36}deg"></span>
+								{/each}
+							</span>
+						{/if}
+					{/key}
+					<button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;">
+						{mode === 'login' ? 'Sign In' : 'Create Account'}
+					</button>
+				</div>
 			</form>
 
 			<p class="toggle">
@@ -98,4 +111,33 @@
 	.field label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; color: var(--wave-mid); }
 	.error { color: var(--crimson); font-size: 0.85rem; text-align: center; }
 	.toggle { margin-top: var(--s4); font-size: 0.85rem; }
+
+	/* 花火 — hanabi firework burst over the submit button */
+	.submit-wrap { position: relative; }
+	.hanabi {
+		position: absolute;
+		top: 50%; left: 50%;
+		width: 0; height: 0;
+		pointer-events: none;
+		z-index: 3;
+	}
+	.spark {
+		position: absolute;
+		top: 0; left: 0;
+		width: 5px; height: 5px;
+		margin: -2.5px;
+		border-radius: 50%;
+		background: var(--gold);
+		transform: rotate(var(--a)) translateY(0);
+		animation: hanabi-fly 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	}
+	.spark:nth-child(odd) { background: var(--vermilion); }
+	.spark:nth-child(3n) { background: var(--wave-foam); }
+	@keyframes hanabi-fly {
+		0% { transform: rotate(var(--a)) translateY(0); opacity: 1; }
+		100% { transform: rotate(var(--a)) translateY(-46px); opacity: 0; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.spark { animation: none; display: none; }
+	}
 </style>

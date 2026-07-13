@@ -18,6 +18,7 @@
 </script>
 
 <div class="overview panel">
+	<span class="hanko overview-seal" aria-hidden="true">風</span>
 	<h2 class="section-title" data-kanji="風">Portfolio</h2>
 	<div class="value">{formattedValue}</div>
 	<div class="change {changeClass}">{changeText}</div>
@@ -32,11 +33,13 @@
 </div>
 
 <style>
-	.overview { padding: var(--s4); text-align: center; }
+	.overview { position: relative; padding: var(--s5); text-align: center; }
+	.overview-seal { position: absolute; top: -14px; right: -12px; z-index: 2; }
 	h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--wave-mid); margin-bottom: var(--s2); }
 	h2::before { font-size: 0.7rem; letter-spacing: 4px; }
 	.value {
-		font-family: var(--serif); font-size: 2.2rem; font-weight: 700; color: var(--ink);
+		font-family: var(--serif); font-size: 2.5rem; font-weight: 700; color: var(--ink);
+		line-height: 1.1; margin-top: var(--s1);
 		animation: value-in .6s ease both;
 	}
 	@keyframes value-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }

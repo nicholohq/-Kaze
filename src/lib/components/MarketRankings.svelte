@@ -102,7 +102,7 @@
 </div>
 
 <style>
-	.rankings { padding: var(--s4); }
+	.rankings { padding: var(--s5); }
 	.header { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); margin-bottom: var(--s3); flex-wrap: wrap; }
 	h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--wave-mid); }
 	h2::before { font-size: 0.7rem; letter-spacing: 4px; }

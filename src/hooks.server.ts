@@ -1,7 +1,8 @@
 import { migrate } from '$lib/server/migrate.js';
 import { verifyToken } from '$lib/server/auth.js';
+import { env } from '$env/dynamic/private';
 
-if (process.env.TURSO_DB_URL) {
+if (env.TURSO_DB_URL) {
 	await migrate();
 }
 

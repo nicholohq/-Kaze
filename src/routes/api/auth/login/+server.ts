@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import { dev } from '$app/environment';
 import { getDb } from '$lib/server/db.js';
 import { verifyPassword, createToken } from '$lib/server/auth.js';
 
@@ -28,7 +29,7 @@ export async function POST({ cookies, request }: { cookies: any; request: Reques
 		path: '/',
 		httpOnly: true,
 		sameSite: 'lax',
-		secure: true,
+		secure: !dev,
 		maxAge: 60 * 60 * 24 * 7
 	});
 

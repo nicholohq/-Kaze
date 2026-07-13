@@ -3,6 +3,8 @@
 	import { auth } from '$lib/stores/auth.svelte.js';
 	import { goto } from '$app/navigation';
 	import { reveal } from '$lib/actions.js';
+	import InkWash from '$lib/components/InkWash.svelte';
+	import JapanesePattern from '$lib/components/JapanesePattern.svelte';
 
 	onMount(() => {
 		if (auth.user) goto('/dashboard');
@@ -17,8 +19,10 @@
 	<div class="hero">
 		<div class="hero-bg"></div>
 		<div class="hero-overlay"></div>
+		<InkWash position="center" intensity={0.4} />
 		<div class="hero-content">
-			<h1 class="hero-title">Kaze</h1>
+			<p class="hero-eyebrow" aria-hidden="true">風 ・ かぜ ・ WIND</p>
+			<h1 class="hero-title brush-light">Kaze</h1>
 			<p class="hero-sub">Track your Ethereum portfolio</p>
 			<div class="hero-cta">
 				<a href="/login" class="btn btn--primary btn--lg">Get Started</a>
@@ -29,6 +33,7 @@
 	</div>
 
 	<div class="features-section reveal" use:reveal>
+		<JapanesePattern pattern="asanoha" opacity={0.05} color="var(--wave-deep)" />
 		<div class="features">
 			<div class="feature panel">
 				<div class="feature-icon">
@@ -90,6 +95,15 @@
 		display: flex; flex-direction: column; align-items: center;
 	}
 
+	.hero-eyebrow {
+		font-family: var(--serif);
+		font-size: clamp(0.7rem, 1.4vw, 0.95rem);
+		letter-spacing: 0.5em;
+		color: var(--gold);
+		margin-bottom: var(--s3);
+		opacity: 0.9;
+		text-indent: 0.5em;
+	}
 	.hero-title {
 		font-size: clamp(4rem, 12vw, 10rem);
 		color: var(--linen);
@@ -97,6 +111,11 @@
 		letter-spacing: 0.03em;
 		margin-bottom: var(--s3);
 		text-shadow: 0 4px 24px rgba(0,0,0,0.3);
+	}
+	.brush-light {
+		background: linear-gradient(100deg, var(--paper) 0%, var(--wave-foam) 45%, var(--wisteria) 100%);
+		-webkit-background-clip: text; background-clip: text;
+		color: transparent;
 	}
 	.hero-sub {
 		font-size: clamp(1rem, 2vw, 1.4rem);
@@ -124,7 +143,7 @@
 	:global(.btn--lg) { padding: var(--s3) var(--s6); font-size: 1rem; }
 
 	.features-section { position: relative; z-index: 1; padding: var(--s6) var(--s4); }
-	.features { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--s4); }
+	.features { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--s4); }
 	.feature { padding: var(--s5); text-align: center; }
 	.feature-icon { margin-bottom: var(--s3); display: flex; justify-content: center; }
 	.feature h3 { font-size: 1.1rem; margin-bottom: var(--s2); }

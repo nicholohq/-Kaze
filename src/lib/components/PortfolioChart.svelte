@@ -119,7 +119,7 @@
 </div>
 
 <style>
-	.chart-section { padding: var(--s4); }
+	.chart-section { padding: var(--s5); }
 	.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--s3); flex-wrap: wrap; gap: var(--s2); }
 	h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--wave-mid); }
 	h2::before { font-size: 0.7rem; letter-spacing: 4px; }

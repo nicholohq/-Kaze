@@ -35,6 +35,19 @@
 
 <div id="scroll-progress" role="progressbar" aria-label="Scroll progress"></div>
 
+<!-- 和紙 — washi paper wash behind the whole app -->
+<div class="washi-bg" aria-hidden="true"></div>
+
+<!-- Global SVG filter defs (torn-ink edge for 判子 hanko seals) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+	<defs>
+		<filter id="hanko-rough">
+			<feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="noise" />
+			<feDisplacementMap in="SourceGraphic" in2="noise" scale="1.6" xChannelSelector="R" yChannelSelector="G" />
+		</filter>
+	</defs>
+</svg>
+
 {#if !loaderDone}
 	<Loader />
 {:else}

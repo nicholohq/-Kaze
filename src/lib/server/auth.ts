@@ -1,11 +1,12 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { env } from '$env/dynamic/private';
 
 const TOKEN_EXPIRY = '7d';
 const SALT_ROUNDS = 10;
 
 function getSecret(): string {
-	const secret = process.env.JWT_SECRET;
+	const secret = env.JWT_SECRET;
 	if (!secret) throw new Error('JWT_SECRET environment variable is required');
 	return secret;
 }

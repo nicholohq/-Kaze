@@ -125,7 +125,7 @@
 </div>
 
 <style>
-	.holdings { padding: var(--s4); }
+	.holdings { padding: var(--s5); }
 	.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--s3); }
 	h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--wave-mid); }
 	h2::before { font-size: 0.7rem; letter-spacing: 4px; }

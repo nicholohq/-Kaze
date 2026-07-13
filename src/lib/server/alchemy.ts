@@ -1,4 +1,5 @@
 import { Alchemy, Network } from 'alchemy-sdk';
+import { env } from '$env/dynamic/private';
 
 export interface TokenBalance {
 	contractAddress: string | null;
@@ -13,7 +14,7 @@ let _alchemy: Alchemy | null = null;
 
 function getAlchemy() {
 	if (!_alchemy) {
-		const key = process.env.ALCHEMY_API_KEY;
+		const key = env.ALCHEMY_API_KEY;
 		if (!key) throw new Error('ALCHEMY_API_KEY environment variable is required');
 		_alchemy = new Alchemy({ apiKey: key, network: Network.ETH_MAINNET });
 	}
